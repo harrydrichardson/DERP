@@ -41,10 +41,11 @@ $_POST['channel_name'] = "#".$_POST['channel_name'];
 
 
 		// Jab fun at Andrew
-        if($_POST['user_name'] == 'andrewherrington'){
-                messageToSlack("You are why we can't have nice things",$_POST['channel_name']);
+        if($_POST['user_name'] != 'harry'){
+                messageToSlack("I am in maintenance mode, you are not an authorized tech",$_POST['channel_name']);
 }
         if( $_POST['user_name'] == 'harry'){
+		if(
 		
 		try{
 		$hostname = mariahost;
