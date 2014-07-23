@@ -51,11 +51,14 @@ $_POST['channel_name'] = "#".$_POST['channel_name'];
 		$hostname = mariahost;
 	        $DBH = new PDO("mysql:host=$hostname;dbname=derp", mariauser, mariapass);
 		
-		$insertSlackNote = $DBH->prepare("insert into shiftnotes (user_name,created_at,note) values ('$user_name',NOW(),'$readBackMessage')");
+		$insertSlackNote = $DBH->prepare("insert into shiftnotes (user_name,created_at,
+		note) values ('$user_name',NOW(),'$readBackMessage')");
+		
 		$insertSlackNote->execute();
 		//compose and send the message back to slack.
-                messageToSlack($_POST['user_name'].": ".$_POST['timestamp']." -- Message Received contains ".count($message).
-		" elements. Message reads '".$readBackMessage."'",$_POST['channel_name']);                
+                messageToSlack($_POST['user_name'].": ".$_POST['timestamp'].
+		" -- Message Received contains ".count($message)." elements. Message reads '"
+		.$readBackMessage."'",$_POST['channel_name']);                
 		
 		die();
 
