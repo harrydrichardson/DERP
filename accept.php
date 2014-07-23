@@ -15,6 +15,7 @@ foreach($message as $word){
 	$readBackMessage .= "$word ";
 }
 	
+$user_name = $_POST['user_name'];
 
 // slack post icon
 define("slackemoji",":derp:");
@@ -33,7 +34,7 @@ $admins = array("harry","tyler");
 // split posted timestamp = 123123423.00020340
 $timestamp = explode(".",$_POST['timestamp']);
 //convert to GMT
-$_POST['timestamp'] = gmdate("M d Y H:i:s",$timestamp[0]);
+$_POST['timestamp'] = gmdate("Y-m-d H:i:s",$timestamp[0]);
 
 // format channel name for the expectation of the incoming hook
 $_POST['channel_name'] = "#".$_POST['channel_name'];
@@ -43,12 +44,27 @@ $_POST['channel_name'] = "#".$_POST['channel_name'];
         if($_POST['user_name'] == 'andrewherrington'){
                 messageToSlack("You are why we can't have nice things",$_POST['channel_name']);
 }
-        if( $_POST['user_name'] == 'harry' || $_POST['user_name'] ==  'tyler'){
+        if( $_POST['user_name'] == 'harry'){
+		
+		try{
+		$hostname = mariahost;
+	        $DBH = new PDO("mysql:host=$hostname;dbname=derp", mariauser, mariapass);
+		
+		$insertSlackNote = $DBH->prepare("insert into shiftnotes (user_name,created_at,note) values ('$user_name',NOW(),'$readBackMessage')");
+		$insertSlackNote->execute();
 		//compose and send the message back to slack.
                 messageToSlack($_POST['user_name'].": ".$_POST['timestamp']." -- Message Received contains ".count($message).
 		" elements. Message reads '".$readBackMessage."'",$_POST['channel_name']);                
 		
 		die();
+
+		}
+		catch(PDOException $e)
+		{
+		messageToSlack("Failure!! check logs.",$_POST['channel_name']);
+
+		$e->getMessage();
+		}
                 }
 
 
