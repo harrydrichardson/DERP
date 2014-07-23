@@ -44,8 +44,10 @@ $_POST['channel_name'] = "#".$_POST['channel_name'];
                 messageToSlack("You are why we can't have nice things",$_POST['channel_name']);
 }
         if( $_POST['user_name'] == 'harry' || $_POST['user_name'] ==  'tyler'){
-
-                messageToSlack($_POST['user_name'].": ".$_POST['timestamp']." -- Message Received contains ".count($message)." elements. Message reads '".$readBackMessage."'",$_POST['channel_name']);                
+		//compose and send the message back to slack.
+                messageToSlack($_POST['user_name'].": ".$_POST['timestamp']." -- Message Received contains ".count($message).
+		" elements. Message reads '".$readBackMessage."'",$_POST['channel_name']);                
+		
 		die();
                 }
 
