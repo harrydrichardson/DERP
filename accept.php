@@ -45,15 +45,14 @@ $_POST['channel_name'] = "#".$_POST['channel_name'];
 }
 	//if me allow access
         if( $_POST['user_name'] == 'harry'){
-		if(
-		
+				
 		try{
 		//set hostname
 		$hostname = mariahost;
 		//detup connection through PDO
 	        $DBH = new PDO("mysql:host=$hostname;dbname=derp", mariauser, mariapass);
 		//Prepare statement
-		// insert into shiftnores (user_name,created_at,note) values ('username',NOW()
+		// insert into shiftnotes (user_name,created_at,note) values ('username',NOW()
 		// ,message);
 		$insertSlackNote = $DBH->prepare("insert into shiftnotes (user_name,created_at,
 		note) values ('$user_name',NOW(),'$readBackMessage')");
