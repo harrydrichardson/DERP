@@ -49,19 +49,28 @@ $_POST['channel_name'] = "#".$_POST['channel_name'];
 		try{
 		//set hostname
 		$hostname = mariahost;
+		
 		//detup connection through PDO
 	        $DBH = new PDO("mysql:host=$hostname;dbname=derp", mariauser, mariapass);
+		
+
 		//Prepare statement
 		// insert into shiftnotes (user_name,created_at,note) values ('username',NOW()
 		// ,message);
 		$insertSlackNote = $DBH->prepare("insert into shiftnotes (user_name,created_at,
 		note) values ('$user_name',NOW(),'$readBackMessage')");
+		
+
 		//execute the command
 		$insertSlackNote->execute();
+		
+
 		//compose and send the message back to slack.
                 messageToSlack($_POST['user_name'].": ".$_POST['timestamp'].
 		" -- Message Received contains ".count($message)." elements. Message reads '"
 		.$readBackMessage."'",$_POST['channel_name']);                
+		
+
 		//exit we are done here
 		die();
 
@@ -88,12 +97,19 @@ $_POST['channel_name'] = "#".$_POST['channel_name'];
 
         function messageToSlack($message,$channel)
         {
-                $broadcastURL = slackurl.slackin;
-                $data= 'payload={"username": "DERP", "channel": "'.$channel.'", "text": "';
+                //configure the broadcast URL
+		$broadcastURL = slackurl.slackin;
+                
+		//configure payload for delivery back to slack
+		$data= 'payload={"username": "DERP", "channel": "'.$channel.'", "text": "';
                 $data.=$message.'", "icon_emoji": "'.slackemoji.'"}';
-                //      debug($data);
+                
+
+		//      debug($data);
                 //      debug($broadcastURL);
-                $ch = curl_init($broadcastURL);
+                
+		// setup curl to 
+		$ch = curl_init($broadcastURL);
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
                 return curl_exec($ch);
         }
