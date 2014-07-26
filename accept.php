@@ -11,9 +11,9 @@ unset($message[0]);
 //setup the message to send back without the trigger word
 $readBackMessage = "";
 //loop through the array assembling the sentence
-foreach($message as $word){
-	$readBackMessage .= "$word ";
-}
+//foreach($message as $word){
+//	$readBackMessage .= "$word ";
+//}
 	
 $user_name = $_POST['user_name'];
 
@@ -45,26 +45,31 @@ $_POST['channel_name'] = "#".$_POST['channel_name'];
 }
 	//if me allow access
         if( $_POST['user_name'] == 'harry'){
-				
+		
+		if ($message[1] == 'shiftnote'){
+		
 		try{
 		//set hostname
 		$hostname = mariahost;
+		//trigger word has been unset. ensure that command word is removed from the readback message. 
+		unset($message[1]);
+		foreach($message as $word){
+        		$readBackMessage .= "$word ";
+		}
+
 		
 		//detup connection through PDO
 	        $DBH = new PDO("mysql:host=$hostname;dbname=derp", mariauser, mariapass);
 		
-
 		//Prepare statement
 		// insert into shiftnotes (user_name,created_at,note) values ('username',NOW()
 		// ,message);
 		$insertSlackNote = $DBH->prepare("insert into shiftnotes (user_name,created_at,
 		note) values ('$user_name',NOW(),'$readBackMessage')");
 		
-
 		//execute the command
 		$insertSlackNote->execute();
 		
-
 		//compose and send the message back to slack.
                 messageToSlack($_POST['user_name'].": ".$_POST['timestamp'].
 		" -- Message Received contains ".count($message)." elements. Message reads '"
@@ -83,8 +88,11 @@ $_POST['channel_name'] = "#".$_POST['channel_name'];
 		$e->getMessage();
 		}
                 }
+		else{
+			messageToSlack($_POST['user_name'].": Uknown command. Try [derp] help for more options.",$_POST['channel_name']);
+		}
 
-
+		}
         //debugs if DEBUG_MODE is true
         function debug($debugMsg)
         {
