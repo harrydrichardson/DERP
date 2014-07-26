@@ -10,10 +10,6 @@ $message = explode(" ",$message);
 unset($message[0]);
 //setup the message to send back without the trigger word
 $readBackMessage = "";
-//loop through the array assembling the sentence
-//foreach($message as $word){
-//	$readBackMessage .= "$word ";
-//}
 	
 $user_name = $_POST['user_name'];
 
@@ -53,6 +49,8 @@ $_POST['channel_name'] = "#".$_POST['channel_name'];
 		$hostname = mariahost;
 		//trigger word has been unset. ensure that command word is removed from the readback message. 
 		unset($message[1]);
+		
+		// reassemble the message without the trigger word or command.
 		foreach($message as $word){
         		$readBackMessage .= "$word ";
 		}
@@ -88,8 +86,12 @@ $_POST['channel_name'] = "#".$_POST['channel_name'];
 		$e->getMessage();
 		}
                 }
+		elseif($message['1'] == 'help'){
+			messageToSlack("DERP Dependable electronics records program: visit the github wiki for more information.",$_POST['channel_name']);
+			}
 		else{
 			messageToSlack($_POST['user_name'].": Uknown command. Try [derp] help for more options.",$_POST['channel_name']);
+			
 		}
 
 		}
