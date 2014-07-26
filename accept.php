@@ -17,7 +17,7 @@ $user_name = $_POST['user_name'];
 define("slackemoji",":derp:");
 
 $channels = array("testing-webhooks","support","support-ss");
-$admins = array("harry","tyler");
+$admins = array("harry","tyler","andrewherrington");
 
                 // Ensure that incoming post has proper auth.
                 // Ensure that it is an authorized channel
@@ -36,7 +36,7 @@ $_POST['timestamp'] = gmdate("Y-m-d H:i:s",$timestamp[0]);
 $_POST['channel_name'] = "#".$_POST['channel_name'];
 
       //if me allow access
-        if( $_POST['user_name'] == 'harry' || $_POST['user_name'] == 'brad'){
+        if(in_array($_POST['user_name'],$admins)){
         	if ($message[1] == 'shiftnote'){
 
             try{
@@ -87,7 +87,7 @@ $_POST['channel_name'] = "#".$_POST['channel_name'];
 		$date = $message['2'];
 		$DBH = new PDO("mysql:host=$hostname;dbname=derp", mariauser, mariapass); 
 
-		$getShiftNotes = $DBH->prepare("SELECT * FROM shiftnotes where user_name='$username' and created_at >= '$date' limit 5");
+		$getShiftNotes = $DBH->prepare("SELECT * FROM shiftnotes where user_name='$username' and created_at >= '$date' limit 20");
 
 		$getShiftNotes->setFetchMode(PDO::FETCH_ASSOC);
 
@@ -117,12 +117,14 @@ $_POST['channel_name'] = "#".$_POST['channel_name'];
             	.$readBackMessage."'",$_POST['channel_name']);  
 		
 		}else{
-                  messageToSlack($_POST['user_name'].": Uknown command. Try [derp] help for more options.",$_POST['channel_name']);
+                  //messageToSlack("_[herp]_",$_POST['channel_name']);
+		  die();
                         }
 
             
       	}else{
-                messageToSlack("I am in maintenance mode, you are not an authorized tech",$_POST['channel_name']);
+                //messageToSlack("Authorization failure for ".$_POST['user_name'],$_POST['channel_name']);
+		die();
       	}
 
         //debugs if DEBUG_MODE is true
