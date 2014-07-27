@@ -6,26 +6,30 @@ $hostname = mariahost;
 $username = mariauser;
 $password = mariapass;
 
-try{
-	$DBH = new PDO("mysql:host=$hostname;dbname=derp", $username, $password);
 
-	echo "connected to db. </BR>";
+if(isset($_POST['date'])){
 
-	$getShiftNotes = $DBH->prepare("SELECT * FROM shiftnotes where created_at>='$date'");
-	$getShiftNotes->setFetchMode(PDO::FETCH_ASSOC);
-	$getShiftNotes->execute();
+	try{
+		$DBH = new PDO("mysql:host=$hostname;dbname=derp", $username, $password);
 
-	$result = $getShiftNotes->fetchAll();
+		echo "connected to db. </BR>";
 
-	foreach($result as $row){
-		echo "Note-'".$row['note']."' by: ".$row['user_name']."@".$row['created_at']."</BR></BR>";
-		}
-	$dbh = null;
-}
-catch(PDOException $e){
-	echo $e->getMessage();
-}
+		$getShiftNotes = $DBH->prepare("SELECT * FROM shiftnotes where created_at>='$date'");
+		$getShiftNotes->setFetchMode(PDO::FETCH_ASSOC);
+		$getShiftNotes->execute();
 
-echo "I'm alive </BR>";
+		$result = $getShiftNotes->fetchAll();
+
+		foreach($result as $row){
+			echo "Note-'".$row['note']."' by: ".$row['user_name']."@".$row['created_at']."</BR></BR>";
+			}	
+		$dbh = null;
+	}
+	catch(PDOException $e){
+		echo $e->getMessage();
+	}
+}else{
+	echo "Incorrect usage";
+}	
 
 ?>
