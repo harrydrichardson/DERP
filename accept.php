@@ -7,7 +7,7 @@ require('config.php');
 $channels = array("testing-webhooks","support","support-ss");
 
 // Setup the users who can utilize the tool
-$admins = array("harry","tyler","andrewherrington");
+$admins = array("harry","tyler","andrewherrington","gary");
 
 // Apply the posted username to a variable
 $user_name = $_POST['user_name'];
